@@ -95,4 +95,20 @@ artistsRouter.put('/:artistId', validateArtist, (req, res, next) => {
       }
     })
 })
+
+// Mark an artist as unemployed (delete handler)
+artistsRouter.delete('/:artistId', (req, res, next) => {
+  db.run(`UPDATE Artist SET is_currently_employed = 0 WHERE id = ${req.params.artistId}`, (error, artist) => {
+    if (error) {
+      next(error)
+    } else {
+      db.get(`SELECT * FROM Artist WHERE id = ${req.params.artistId}`, (error, artist) => {
+        if (error) {
+          next(error)
+        }
+        res.status(200).json({ artist: artist })
+      })
+    }
+  })
+})
 module.exports = artistsRouter
