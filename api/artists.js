@@ -8,7 +8,7 @@ const artistsRouter = express.Router()
 const validateArtist = (req, res, next) => {
   const artist = req.body.artist
   if (!artist.name || !artist.dateOfBirth || !artist.biography) {
-    res.sendStatus(404)
+    res.sendStatus(400)
   }
   if (!artist.isCurrentlyEmployed) {
     req.body.artist.isCurrentlyEmployed = 1
@@ -70,5 +70,10 @@ artistsRouter.post('/', validateArtist, (req, res, next) => {
     }
   }
   )
+})
+
+// Update an artist
+artistsRouter.put('/:artistId', validateArtist, (req, res, next) => {
+
 })
 module.exports = artistsRouter
