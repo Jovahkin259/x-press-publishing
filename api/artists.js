@@ -74,6 +74,25 @@ artistsRouter.post('/', validateArtist, (req, res, next) => {
 
 // Update an artist
 artistsRouter.put('/:artistId', validateArtist, (req, res, next) => {
-
+  db.run('UPDATE Artist SET name = $name, date_of_birth = $dateOfBirth, biography = $biography, is_currently_employed = $isCurrentlyEmployed WHERE id = $artist',
+    {
+      $name: req.body.artist.name,
+      $dateOfBirth: req.body.artist.dateOfBirth,
+      $biography: req.body.artist.biography,
+      $isCurrentlyEmployed: req.body.artist.isCurrentlyEmployed,
+      $artist: req.params.artistId
+    },
+    function (error) {
+      if (error) {
+        next(error)
+      } else {
+        db.get(`SELECT * FROM Artist WHERE Artist.id = ${req.params.artistId}`, (error, artist) => {
+          if (error) {
+            next(error)
+          }
+          res.status(200).json({ artist: artist })
+        })
+      }
+    })
 })
 module.exports = artistsRouter
