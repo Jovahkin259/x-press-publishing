@@ -8,7 +8,7 @@ const artistsRouter = express.Router()
 const validateArtist = (req, res, next) => {
   const artist = req.body.artist
   if (!artist.name || !artist.dateOfBirth || !artist.biography) {
-    res.sendStatus(400)
+    return res.sendStatus(400)
   }
   if (!artist.isCurrentlyEmployed) {
     req.body.artist.isCurrentlyEmployed = 1
@@ -74,13 +74,13 @@ artistsRouter.post('/', validateArtist, (req, res, next) => {
 
 // Update an artist
 artistsRouter.put('/:artistId', validateArtist, (req, res, next) => {
-  db.run('UPDATE Artist SET name = $name, date_of_birth = $dateOfBirth, biography = $biography, is_currently_employed = $isCurrentlyEmployed WHERE id = $artist',
+  db.run('UPDATE Artist SET name = $name, date_of_birth = $dateOfBirth, biography = $biography, is_currently_employed = $isCurrentlyEmployed WHERE id = $artistId',
     {
       $name: req.body.artist.name,
       $dateOfBirth: req.body.artist.dateOfBirth,
       $biography: req.body.artist.biography,
       $isCurrentlyEmployed: req.body.artist.isCurrentlyEmployed,
-      $artist: req.params.artistId
+      $artistId: req.params.artistId
     },
     function (error) {
       if (error) {
