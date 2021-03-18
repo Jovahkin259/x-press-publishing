@@ -17,6 +17,10 @@ seriesRouter.param('seriesId', (req, res, next, seriesId) => {
   })
 })
 
+// Get a series by id
+seriesRouter.get('/:seriesId', (req, res, next) => {
+  res.status(200).json({ series: req.series })
+})
 // Get all series
 seriesRouter.get('/', (req, res, next) => {
   db.all('SELECT * FROM Series', (error, series) => {
