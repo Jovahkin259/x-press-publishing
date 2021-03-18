@@ -39,5 +39,25 @@ seriesRouter.get('/', (req, res, next) => {
     }
   })
 })
-
+// Create a new series
+seriesRouter.post('/', validateSeries, (req, res, next) => {
+  db.run('INSERT INTO Series (name, description) VALUES ($name, $description)',
+    {
+      $name: req.body.series.name,
+      $description: req.body.series.description
+    },
+    function (error) {
+      if (error) {
+        next(error)
+      } else {
+        db.get(`SELECT * FROM Series WHERE id = ${this.lastID}`, (error, series) => {
+          if (error) {
+            next(error)
+          } else {
+            res.status(201).json({ series: series })
+          }
+        })
+      }
+    })
+})
 module.exports = seriesRouter
