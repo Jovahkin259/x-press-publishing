@@ -9,11 +9,12 @@ const PORT = process.env.PORT || 4001
 const apiRouter = require('./api/api')
 
 app.use(bodyParser.json())
-app.use(errorHandler())
+
 app.use(morgan('dev'))
 app.use(cors())
 
-app.use('api', apiRouter)
+app.use('/api', apiRouter)
+app.use(errorHandler())
 
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
 
