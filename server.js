@@ -11,3 +11,7 @@ app.use(bodyParser.json())
 app.use(errorHandler())
 app.use(morgan('dev'))
 app.use(cors())
+
+app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
+
+module.exports = app
