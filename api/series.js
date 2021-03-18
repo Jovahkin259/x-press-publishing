@@ -2,6 +2,10 @@ const express = require('express')
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database(process.env.TEST_DATABASE || '../database.sqlite')
 const seriesRouter = express.Router()
+const issuesRouter = require('./issues')
+
+// Mount issues router
+seriesRouter.use('/:seriesId/issues', issuesRouter)
 
 const validateSeries = (req, res, next) => {
   if (!req.body.series.name || !req.body.series.description) {
