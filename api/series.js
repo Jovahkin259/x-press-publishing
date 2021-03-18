@@ -60,4 +60,25 @@ seriesRouter.post('/', validateSeries, (req, res, next) => {
       }
     })
 })
+
+seriesRouter.put('/:seriesId', validateSeries, (req, res, next) => {
+  db.run('UPDATE Series SET name = $name, description = $description WHERE id = $id', {
+    $name: req.body.series.name,
+    $description: req.body.series.description,
+    $id: req.params.seriesId
+  },
+  function (error) {
+    if (error) {
+      next(error)
+    } else {
+      db.get(`SELECT * FROM Series WHERE id = ${req.params.seriesId}`, (error, series) => {
+        if (error) {
+          next(error)
+        } else {
+          res.status(200).json({ series: series })
+        }
+      })
+    }
+  })
+})
 module.exports = seriesRouter
