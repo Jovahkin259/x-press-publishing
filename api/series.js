@@ -3,6 +3,14 @@ const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database(process.env.TEST_DATABASE || '../database.sqlite')
 const seriesRouter = express.Router()
 
+const validateSeries = (req, res, next) => {
+  if (!req.body.series.name || !req.body.series.description) {
+    res.sendStatus(400)
+  } else {
+    next()
+  }
+}
+
 // Check seriesId
 seriesRouter.param('seriesId', (req, res, next, seriesId) => {
   db.get(`SELECT * FROM Series WHERE id = ${seriesId}`, (error, series) => {
@@ -31,4 +39,5 @@ seriesRouter.get('/', (req, res, next) => {
     }
   })
 })
+
 module.exports = seriesRouter
